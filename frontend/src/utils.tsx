@@ -1,9 +1,11 @@
-export const DIFFICULTY_MAP: { [key: string]: string } = {
-  1: 'easy',
-  2: 'medium',
-  3: 'hard',
-};
 const USED_WORDS = 'usedWords';
+
+export const DIFFICULTY_MAP: { [key: string]: string } = {
+  1: 'Easy',
+  2: 'Medium',
+  3: 'Hard',
+};
+export const SECONDS_TO_WAIT = 'secondsToWait';
 
 export const localStorageName = (difficulty: number): string => {
   return `${USED_WORDS}|${DIFFICULTY_MAP[difficulty]}`;

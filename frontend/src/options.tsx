@@ -1,9 +1,16 @@
 import cogoToast from 'cogo-toast';
 import _ from 'lodash';
-import { Link } from 'react-router-dom';
 import React from 'react';
-import { Button, Text, View } from 'react-native';
-import { allLocalStorageNames } from './utils';
+import { SECONDS_TO_WAIT, allLocalStorageNames } from './utils';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  button: {
+    margin: '10px 0px',
+  },
+});
 
 const clearUsedWords = (): void => {
   allLocalStorageNames().forEach((lsKey) => {
@@ -47,29 +54,65 @@ const exportUsedWords = (): void => {
 };
 
 export const Options = () => {
+  const classes = useStyles();
+  const [secondsToWait, setSecondsToWait] = React.useState(parseInt(localStorage.getItem(SECONDS_TO_WAIT) || '3'));
   return (
-    <View>
-      <Text>Game Options</Text>
-      <Button title="Clear Used Word List" onPress={() => clearUsedWords()} />
+    <>
+      <h1>Game Options</h1>
+
+      {/*Invisible file input button*/}
+      <input
+        type="file"
+        onChange={importUsedWords}
+        id="upload-input"
+        style={{
+          display: 'none',
+        }}
+      />
+      <>
+        Wait&nbsp;
+        <select
+          value={secondsToWait}
+          onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+            const newSecondsToWait = event.target.value as string;
+            setSecondsToWait(parseInt(newSecondsToWait));
+            localStorage.setItem(SECONDS_TO_WAIT, newSecondsToWait);
+          }}
+        >
+          {[0, 1, 2, 3, 5, 9].map((value) => (
+            <option>{value}</option>
+          ))}
+        </select>
+        &nbsp;Seconds before revealing word
+        <br />
+        <ButtonGroup
+          className={classes.button}
+          orientation="vertical"
+          color="primary"
+          aria-label="vertical contained primary button group"
+          variant="contained"
+        >
+          <Button variant="contained" color="primary" onClick={() => clearUsedWords()}>
+            Clear Used Word List
+          </Button>
+          <Button variant="contained" color="primary" onClick={() => document.getElementById('upload-input')?.click()}>
+            Import Used Word List
+          </Button>
+          <Button variant="contained" color="primary" onClick={() => exportUsedWords()}>
+            Export Used Word List
+          </Button>
+        </ButtonGroup>
+      </>
       <br />
 
-      <div className="button">
-        <Button title="Import Used Word List" onPress={() => document.getElementById('upload-input')?.click()} />
-        <input
-          type="file"
-          onChange={importUsedWords}
-          id="upload-input"
-          style={{
-            display: 'none',
-          }}
-        />
-      </div>
-      <br />
-      <Button title="Export Used Word List" onPress={() => exportUsedWords()} />
-      <br />
-      <Link to="/">
-        <button type="button">Home</button>
-      </Link>
-    </View>
+      <ButtonGroup orientation="vertical" variant="contained">
+        <Button variant="contained" href="/used_words">
+          Used Words
+        </Button>
+        <Button variant="contained" href="/">
+          Home
+        </Button>
+      </ButtonGroup>
+    </>
   );
 };
