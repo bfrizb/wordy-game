@@ -3,13 +3,15 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import yaml from 'yaml';
 import { Options } from './options';
 import { UsedWords } from './used-words';
-import { DIFFICULTY_MAP, SECONDS_TO_WAIT, localStorageName } from './utils';
+import { DIFFICULTY_MAP, localStorageName } from './utils';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { makeStyles } from '@material-ui/core/styles';
+import { DisplayWord } from './display-word';
 
-// TODO: Options to select URL to use for word-list (thus custom word-lists)
 // TODO: const Home = () => { is GIANT! reduce its size
+// TODO: Sharing used word list (saved on server)
+// TODO: Options to select URL to use for word-list (thus custom word-lists)
 
 const useStyles = makeStyles({
   button: {
@@ -17,26 +19,10 @@ const useStyles = makeStyles({
   },
 });
 
-type CountdownProps = {
-  numSeconds: number;
-  currentWord: string | null;
-};
-
-const Countdown = (props: CountdownProps) => {
-  const [secondsLeft, setSecondsLeft] = React.useState(props.numSeconds); // https://dev.to/zhiyueyi/how-to-create-a-simple-react-countdown-timer-4mc3
-
-  useEffect(() => {
-    secondsLeft > 0 && setTimeout(() => setSecondsLeft(secondsLeft - 1), 1000);
-  }, [secondsLeft]);
-
-  if (secondsLeft === 0) return <h1 style={{ fontSize: 40, textTransform: 'capitalize' }}>{props.currentWord}</h1>;
-  else return <h1>Word displayed in: {secondsLeft} seconds</h1>;
-};
-
 const Game = () => {
   const classes = useStyles();
   const [currentWord, setCurrentWord] = useState<string | null>(null);
-  const [difficulty, setDifficulty] = useState<number | null>(null); // Actually an integer: 1, 2, or 3
+  const [difficulty, setDifficulty] = useState<number | null>(null);
   const [wordList, setWordList] = useState<string[]>([]);
 
   useEffect(() => {
@@ -77,53 +63,14 @@ const Game = () => {
 
   const Home = () => {
     if (difficulty) {
-      // Check if all words have been used
-      const possibleWords = wordList[difficulty];
-      const alreadyUsedWords = JSON.parse(localStorage.getItem(localStorageName(difficulty)) || '[]');
-      if (possibleWords.length === alreadyUsedWords.length) {
-        return (
-          <>
-            <h1 style={{ fontSize: 40, textTransform: 'capitalize' }}>
-              All words used. You must REALLY like this game!
-            </h1>
-            <Button variant="contained" onClick={() => setDifficulty(null)}>
-              Home
-            </Button>
-          </>
-        );
-      }
-
-      // Displays word of the previously selected difficulty
-      const nextTitle = `Next ${DIFFICULTY_MAP[difficulty]} Word`;
-
-      const buttons: React.ReactFragment[] = [];
-      for (const diffIndex in DIFFICULTY_MAP) {
-        if (parseInt(diffIndex) == difficulty) continue;
-        const buttonTitle = `${DIFFICULTY_MAP[diffIndex]} Word`;
-        buttons.push(
-          <Button variant="contained" onClick={() => setNewWord(parseInt(diffIndex))}>
-            {buttonTitle}
-          </Button>,
-        );
-      }
       return (
-        <>
-          <div>
-            <h2>The {DIFFICULTY_MAP[difficulty]} word is ...</h2>
-            <Countdown numSeconds={parseInt(localStorage.getItem(SECONDS_TO_WAIT) || '3')} currentWord={currentWord} />
-          </div>
-          <Button variant="contained" color="primary" onClick={() => setNewWord(difficulty)}>
-            {nextTitle}
-          </Button>
-          <br /> {/* TODO - Replace */}
-          <br /> {/* TODO - Replace */}
-          <ButtonGroup orientation="vertical" variant="contained">
-            {buttons}
-            <Button variant="contained" onClick={() => setDifficulty(null)}>
-              Home
-            </Button>
-          </ButtonGroup>
-        </>
+        <DisplayWord
+          currentWord={currentWord}
+          difficulty={difficulty}
+          setDifficulty={setDifficulty}
+          wordList={wordList}
+          setNewWord={setNewWord}
+        />
       );
     } else {
       // Allows user to select word difficulty
