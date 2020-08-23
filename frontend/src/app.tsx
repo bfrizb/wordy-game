@@ -3,24 +3,14 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import yaml from 'yaml';
 import { Options } from './options';
 import { UsedWords } from './used-words';
-import { DIFFICULTY_MAP, localStorageName } from './utils';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import { makeStyles } from '@material-ui/core/styles';
+import { localStorageName } from './utils';
 import { DisplayWord } from './display-word';
+import { Home } from './home';
 
-// TODO: const Home = () => { is GIANT! reduce its size
 // TODO: Sharing used word list (saved on server)
 // TODO: Options to select URL to use for word-list (thus custom word-lists)
 
-const useStyles = makeStyles({
-  button: {
-    margin: '10px 0px',
-  },
-});
-
 const Game = () => {
-  const classes = useStyles();
   const [currentWord, setCurrentWord] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<number | null>(null);
   const [wordList, setWordList] = useState<string[]>([]);
@@ -61,7 +51,7 @@ const Game = () => {
     localStorage.setItem(localStorageName(difficulty), JSON.stringify(usedWords));
   };
 
-  const Home = () => {
+  const MainPage = () => {
     if (difficulty) {
       return (
         <DisplayWord
@@ -73,41 +63,7 @@ const Game = () => {
         />
       );
     } else {
-      // Allows user to select word difficulty
-      const buttons: React.ReactFragment[] = [];
-
-      for (const diffIndex in DIFFICULTY_MAP) {
-        const buttonTitle = `${DIFFICULTY_MAP[diffIndex]} Word`;
-        buttons.push(
-          <Button variant="contained" color="primary" onClick={() => setNewWord(parseInt(diffIndex))}>
-            {buttonTitle}
-          </Button>,
-        );
-      }
-      return (
-        <>
-          <h1>Home Menu</h1>
-          <h2>Select Difficulty</h2>
-          <ButtonGroup
-            className={classes.button}
-            orientation="vertical"
-            color="primary"
-            aria-label="vertical contained primary button group"
-            variant="contained"
-          >
-            {buttons}
-          </ButtonGroup>
-          <br /> {/* TODO - Replace */}
-          <ButtonGroup orientation="vertical" variant="contained">
-            <Button variant="contained" href="/used_words">
-              Used Words
-            </Button>
-            <Button variant="contained" href="/options">
-              Options
-            </Button>
-          </ButtonGroup>
-        </>
-      );
+      return <Home setNewWord={setNewWord} />;
     }
   };
 
@@ -115,7 +71,7 @@ const Game = () => {
     <Router>
       <Switch>
         <Route exact path="/">
-          <Home />
+          <MainPage />
         </Route>
         <Route path="/used_words">
           <UsedWords />
