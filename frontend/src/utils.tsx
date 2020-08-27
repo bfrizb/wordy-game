@@ -6,6 +6,7 @@ export const DIFFICULTY_MAP: { [key: string]: string } = {
   3: 'Hard',
 };
 export const SECONDS_TO_WAIT = 'secondsToWait';
+export const SHORT_SHARING_CODE_NAME = 'shortSharingCode';
 
 export const localStorageName = (difficulty: number): string => {
   return `${USED_WORDS}|${DIFFICULTY_MAP[difficulty]}`;

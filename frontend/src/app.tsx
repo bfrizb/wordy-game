@@ -8,7 +8,7 @@ import { DisplayWord } from './display-word';
 import { Home } from './home';
 
 // TODO: Sharing used word list (saved on server)
-// TODO: Options to select URL to use for word-list (thus custom word-lists)
+// Feature: Options to select URL to use for word-list (thus custom word-lists)
 
 const Game = () => {
   const [currentWord, setCurrentWord] = useState<string | null>(null);
