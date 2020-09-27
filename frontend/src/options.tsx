@@ -75,14 +75,14 @@ const getAllUsedWords = () => {
 };
 
 const createShortCode = async () => {
-  //const resp = TODO
-  await fetch('http://localhost:9000/', {
+  const resp = await fetch('http://localhost:9000/save', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(getAllUsedWords()),
   });
+  console.log(await resp.text());
 };
 
 const importUsedWords = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -17,7 +17,7 @@ const Game = () => {
 
   useEffect(() => {
     const readWordList = async () => {
-      let resp = await fetch('http://localhost:9000/');
+      let resp = await fetch('http://localhost:9000/wordList');
       setWordList(yaml.parse(await resp.text()));
     };
     readWordList();
