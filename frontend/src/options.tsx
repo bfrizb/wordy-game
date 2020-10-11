@@ -1,7 +1,7 @@
 import cogoToast from 'cogo-toast';
 import _ from 'lodash';
 import React from 'react';
-import { SECONDS_TO_WAIT, allLocalStorageNames } from './utils';
+import { clearUsedWords, SECONDS_TO_WAIT } from './utils';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -55,13 +55,6 @@ export default function SearchListInput() {
     </Paper>
   );
 }
-
-const clearUsedWords = (): void => {
-  allLocalStorageNames().forEach((lsKey) => {
-    localStorage.removeItem(lsKey);
-  });
-  cogoToast.success('Used word list cleared');
-};
 
 const getAllUsedWords = () => {
   let allUsedWords: { [key: string]: string } = {};
@@ -181,7 +174,14 @@ export const Options = () => {
           <Button variant="contained" color="primary" onClick={() => document.getElementById('upload-input')?.click()}>
             Import from File
           </Button>
-          <Button variant="contained" color="primary" onClick={() => clearUsedWords()}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              clearUsedWords();
+              cogoToast.success('Used word list cleared');
+            }}
+          >
             Clear Used Word List
           </Button>
         </ButtonGroup>

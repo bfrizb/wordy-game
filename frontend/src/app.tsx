@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import yaml from 'yaml';
 import { Options } from './options';
 import { UsedWords } from './used-words';
-import { localStorageName } from './utils';
+import { getUsedWords, addUsedWord } from './utils';
 import { DisplayWord } from './display-word';
 import { Home } from './home';
 
@@ -12,7 +12,7 @@ import { Home } from './home';
 
 const Game = () => {
   const [currentWord, setCurrentWord] = useState<string | null>(null);
-  const [difficulty, setDifficulty] = useState<number | null>(null);
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [wordList, setWordList] = useState<string[]>([]);
 
   useEffect(() => {
@@ -23,13 +23,13 @@ const Game = () => {
     readWordList();
   }, []);
 
-  const setNewWord = (difficulty: number | null): void => {
-    if (difficulty === null) throw new Error('difficulty level is "null" in "setNewWord"');
-    setDifficulty(difficulty);
+  const setNewWord = (difficultyNumberString: string | null): void => {
+    if (difficultyNumberString === null) throw new Error('difficulty level is "null" in "setNewWord"');
+    setDifficulty(difficultyNumberString);
     console.log(wordList);
-    var possibleWords = wordList[difficulty];
+    var possibleWords = wordList[parseInt(difficultyNumberString)];
     let chosenWordIndex = Math.floor(possibleWords.length * Math.random());
-    const usedWords = JSON.parse(localStorage.getItem(localStorageName(difficulty)) || '[]');
+    const usedWords = getUsedWords(difficultyNumberString);
 
     // There's a better way to do this, but the probability of encountering a used word
     // is so low, that the inefficiencies here are negligible
@@ -47,8 +47,7 @@ const Game = () => {
       }
     }
     setCurrentWord(newWord);
-    usedWords.push(newWord);
-    localStorage.setItem(localStorageName(difficulty), JSON.stringify(usedWords));
+    addUsedWord(newWord, difficultyNumberString);
   };
 
   const MainPage = () => {
