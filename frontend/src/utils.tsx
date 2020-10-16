@@ -14,35 +14,39 @@ const APP_VERSION = 1;
 */
 
 export const SECONDS_TO_WAIT = 'secondsToWait';
+export const SHORT_SHARING_CODE_NAME = 'shortSharingCode';
 
-export const DIFFICULTY_MAP: { [key: string]: string } = {
-  1: 'Easy',
-  2: 'Medium',
-  3: 'Hard',
-};
+// TODO - change to simple array (PARTIALLY DONE)
+export const DIFFICULTY_LEVELS: string[] = ['Easy', 'Medium', 'Hard'];
 
 export const clearUsedWords = (): void => {
   localStorage.removeItem(USED_WORDS);
 };
 
-export const getUsedWords = (difficultyNumberString: string): string[] => {
-  return JSON.parse(localStorage.getItem(USED_WORDS) || '{}')[DIFFICULTY_MAP[difficultyNumberString]];
+export const getUsedWords = (diffLevel: string): string[] => {
+  return JSON.parse(localStorage.getItem(USED_WORDS) || '{}')[diffLevel];
 };
 
-export const addUsedWord = (word: string, difficulty: string): void => {
+export const getAllUsedWords = () => {
+  let allUsedWords: { [key: string]: string[] } = {};
+  DIFFICULTY_LEVELS.forEach((diffLevel) => {
+    allUsedWords[diffLevel] = getUsedWords(diffLevel);
+  });
+  return allUsedWords;
+};
+
+export const addUsedWords = (words: string[], diffLevel: string): void => {
   let usedWords = JSON.parse(localStorage.getItem(USED_WORDS) || '{}');
   if (usedWords == {}) {
     usedWords = { version: APP_VERSION };
   }
-  if (usedWords.hasOwnProperty(DIFFICULTY_MAP[difficulty])) {
-    usedWords[DIFFICULTY_MAP[difficulty]].push(word);
-  } else {
-    usedWords[DIFFICULTY_MAP[difficulty]] = [word];
-  }
+  words.forEach((w) => {
+    if (usedWords.hasOwnProperty(diffLevel)) {
+      usedWords[diffLevel].push(w);
+    } else {
+      usedWords[diffLevel] = [w];
+    }
+  });
 
   localStorage.setItem(USED_WORDS, JSON.stringify(usedWords));
 };
-
-// =============
-
-export const SHORT_SHARING_CODE_NAME = 'shortSharingCode';

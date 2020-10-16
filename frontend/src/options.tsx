@@ -1,7 +1,7 @@
 import cogoToast from 'cogo-toast';
 import _ from 'lodash';
 import React from 'react';
-import { clearUsedWords, SECONDS_TO_WAIT } from './utils';
+import { clearUsedWords, SECONDS_TO_WAIT, getAllUsedWords, addUsedWords, DIFFICULTY_LEVELS } from './utils';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -56,17 +56,6 @@ export default function SearchListInput() {
   );
 }
 
-const getAllUsedWords = () => {
-  let allUsedWords: { [key: string]: string } = {};
-  allLocalStorageNames().forEach((lsKey) => {
-    const someUsedWords = localStorage.getItem(lsKey);
-    if (someUsedWords) {
-      allUsedWords[lsKey] = someUsedWords;
-    }
-  });
-  return allUsedWords;
-};
-
 const createShortCode = async () => {
   const resp = await fetch('http://localhost:9000/save', {
     method: 'POST',
@@ -84,8 +73,8 @@ const importUsedWords = (event: React.ChangeEvent<HTMLInputElement>) => {
     reader.onload = () => {
       if (typeof reader.result === 'string') {
         const allUsedWords = JSON.parse(reader.result);
-        allLocalStorageNames().forEach((lsKey) => {
-          localStorage.setItem(lsKey, allUsedWords[lsKey] || []);
+        DIFFICULTY_LEVELS.forEach((diffLevel) => {
+          addUsedWords(allUsedWords[diffLevel], diffLevel);
         });
       }
     };

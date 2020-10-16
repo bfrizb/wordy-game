@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import yaml from 'yaml';
 import { Options } from './options';
 import { UsedWords } from './used-words';
-import { getUsedWords, addUsedWord } from './utils';
+import { getUsedWords, addUsedWords } from './utils';
 import { DisplayWord } from './display-word';
 import { Home } from './home';
 
@@ -47,7 +47,7 @@ const Game = () => {
       }
     }
     setCurrentWord(newWord);
-    addUsedWord(newWord, difficultyNumberString);
+    addUsedWords([newWord], difficultyNumberString);
   };
 
   const MainPage = () => {
@@ -55,7 +55,7 @@ const Game = () => {
       return (
         <DisplayWord
           currentWord={currentWord}
-          difficulty={difficulty}
+          diffLevel={difficulty}
           setDifficulty={setDifficulty}
           wordList={wordList}
           setNewWord={setNewWord}
