@@ -1,14 +1,14 @@
-1:  # easy
+Easy:
   - hello
   - school
   - rules
   - tools
-2:  # medium
+Medium:
   - nuclear
   - meteor
   - mana
   - recoder
-3:  # hard
+Hard:
   - subcutaneous
   - retrograde
   - beneficent

@@ -30,8 +30,8 @@ var translate = (id: string) => {
   return id;
 };
 
-router.get('/wordList', (__: express.Request, res: express.Response) => {
-  const data = fs.readFileSync(__dirname + '/../../aux/word_list.yaml', 'utf8');
+router.get('/wordLists', (__: express.Request, res: express.Response) => {
+  const data = fs.readFileSync(__dirname + '/../../aux/word_lists.yaml', 'utf8');
   res.send(data);
 });
 

@@ -37,7 +37,7 @@ export const getAllUsedWords = () => {
 
 export const addUsedWords = (words: string[], diffLevel: string): void => {
   let usedWords = JSON.parse(localStorage.getItem(USED_WORDS) || '{}');
-  if (usedWords == {}) {
+  if (usedWords === {}) {
     usedWords = { version: APP_VERSION };
   }
   words.forEach((w) => {
@@ -47,6 +47,5 @@ export const addUsedWords = (words: string[], diffLevel: string): void => {
       usedWords[diffLevel] = [w];
     }
   });
-
   localStorage.setItem(USED_WORDS, JSON.stringify(usedWords));
 };

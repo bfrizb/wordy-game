@@ -10,26 +10,30 @@ import { Home } from './home';
 // TODO: Sharing used word list (saved on server)
 // Feature: Options to select URL to use for word-list (thus custom word-lists)
 
+export type wordListsType = { [key: string]: string[] };
+
 const Game = () => {
   const [currentWord, setCurrentWord] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<string | null>(null);
-  const [wordList, setWordList] = useState<string[]>([]);
+  const [wordLists, setwordLists] = useState<wordListsType>({});
 
   useEffect(() => {
-    const readWordList = async () => {
-      let resp = await fetch('http://localhost:9000/wordList');
-      setWordList(yaml.parse(await resp.text()));
+    const readwordLists = async () => {
+      let resp = await fetch('http://localhost:9000/wordLists');
+      setwordLists(yaml.parse(await resp.text()));
     };
-    readWordList();
+    readwordLists();
   }, []);
 
-  const setNewWord = (difficultyNumberString: string | null): void => {
-    if (difficultyNumberString === null) throw new Error('difficulty level is "null" in "setNewWord"');
-    setDifficulty(difficultyNumberString);
-    console.log(wordList);
-    var possibleWords = wordList[parseInt(difficultyNumberString)];
+  const setNewWord = (diffLevel: string | null): void => {
+    if (diffLevel === null) throw new Error('difficulty level is "null" in "setNewWord"');
+    setDifficulty(diffLevel);
+    console.log('bjf');
+    console.log(wordLists);
+    var possibleWords = wordLists[diffLevel];
+
     let chosenWordIndex = Math.floor(possibleWords.length * Math.random());
-    const usedWords = getUsedWords(difficultyNumberString);
+    const usedWords = getUsedWords(diffLevel);
 
     // There's a better way to do this, but the probability of encountering a used word
     // is so low, that the inefficiencies here are negligible
@@ -47,7 +51,7 @@ const Game = () => {
       }
     }
     setCurrentWord(newWord);
-    addUsedWords([newWord], difficultyNumberString);
+    addUsedWords([newWord], diffLevel);
   };
 
   const MainPage = () => {
@@ -57,7 +61,7 @@ const Game = () => {
           currentWord={currentWord}
           diffLevel={difficulty}
           setDifficulty={setDifficulty}
-          wordList={wordList}
+          wordLists={wordLists}
           setNewWord={setNewWord}
         />
       );
