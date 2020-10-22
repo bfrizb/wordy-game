@@ -30,6 +30,9 @@ type DisplayWordProps = {
 
 export const DisplayWord = (props: DisplayWordProps) => {
   // Check if all words have been used
+  console.log('hiii');
+  console.log(props.wordLists);
+  console.log(props.wordLists[props.diffLevel]);
   const possibleWords = props.wordLists[props.diffLevel];
   const alreadyUsedWords = getUsedWords(props.diffLevel);
   if (possibleWords.length === alreadyUsedWords.length) {
@@ -47,15 +50,16 @@ export const DisplayWord = (props: DisplayWordProps) => {
   const nextTitle = `Next ${props.diffLevel} Word`;
 
   const buttons: React.ReactFragment[] = [];
-  for (const diffLevel in DIFFICULTY_LEVELS) {
-    if (diffLevel === props.diffLevel) continue;
-    const buttonTitle = `${diffLevel} Word`;
-    buttons.push(
-      <Button variant="contained" onClick={() => props.setNewWord(diffLevel)}>
-        {buttonTitle}
-      </Button>,
-    );
-  }
+  DIFFICULTY_LEVELS.forEach((diffLevel) => {
+    if (diffLevel !== props.diffLevel) {
+      const buttonTitle = `${diffLevel} Word`;
+      buttons.push(
+        <Button variant="contained" onClick={() => props.setNewWord(diffLevel)}>
+          {buttonTitle}
+        </Button>,
+      );
+    }
+  });
   return (
     <>
       <div>

@@ -16,7 +16,6 @@ const APP_VERSION = 1;
 export const SECONDS_TO_WAIT = 'secondsToWait';
 export const SHORT_SHARING_CODE_NAME = 'shortSharingCode';
 
-// TODO - change to simple array (PARTIALLY DONE)
 export const DIFFICULTY_LEVELS: string[] = ['Easy', 'Medium', 'Hard'];
 
 export const clearUsedWords = (): void => {
@@ -24,7 +23,7 @@ export const clearUsedWords = (): void => {
 };
 
 export const getUsedWords = (diffLevel: string): string[] => {
-  return JSON.parse(localStorage.getItem(USED_WORDS) || '{}')[diffLevel];
+  return JSON.parse(localStorage.getItem(USED_WORDS) || '{}')[diffLevel] || [];
 };
 
 export const getAllUsedWords = () => {

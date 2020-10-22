@@ -28,8 +28,6 @@ const Game = () => {
   const setNewWord = (diffLevel: string | null): void => {
     if (diffLevel === null) throw new Error('difficulty level is "null" in "setNewWord"');
     setDifficulty(diffLevel);
-    console.log('bjf');
-    console.log(wordLists);
     var possibleWords = wordLists[diffLevel];
 
     let chosenWordIndex = Math.floor(possibleWords.length * Math.random());
