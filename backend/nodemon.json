@@ -1,0 +1,7 @@
+
+{
+    "watch": ["."],
+    "ext": "ts",
+    "ignore": ["public", "node_modules"],
+    "exec": "NODE_ENV=development ts-node ./src/bin/www"
+  }
